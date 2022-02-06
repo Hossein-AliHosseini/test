@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from nobitex.models import Market, Trade
+from nobitex.models import Market, Trades
 import datetime
 import requests
 import sys
@@ -7,7 +7,7 @@ import json
 
 class Command(BaseCommand):
     help = 'Prints Trades on Website which have existing Market in Database in Terminal'
-    
+
     def handle(self, *args, **kwargs):
         all_market = Market.objects.all()
         for market in all_market:
@@ -16,8 +16,8 @@ class Command(BaseCommand):
             all_trades = json_data['trades']
             for trade in all_trades:
                 try:
-                    new_trade = Trade.objects.create(time=(trade['time']//1000), price=float(trade['price']), 
+                    new_trade = Trades.objects.create(time=(datetime.datetime.fromtimestamp(trade['time']//1000)), price=float(trade['price']),
                                                     volume=float(trade['volume']), type=trade['type'][0], market=market)
-                    new_trade.save()
+                    # new_trade.save()
                 except:
-                     sys.stdout.write('Trade with current time is already exists in databse\n')
+                    sys.stdout.write('Trade with current time is already exists in database\n')
