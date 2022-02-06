@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Market(models.Model):
     base_asset = models.CharField(max_length=8)
     quote_asset = models.CharField(max_length=8)
@@ -12,13 +13,11 @@ class Market(models.Model):
                 setattr(self, field_name, val.upper())
         super(Market, self).save(*args, **kwargs)
 
-
     class Meta:
         unique_together = ('base_asset', 'quote_asset')
 
     def __str__(self):
         return self.base_asset + '-' + self.quote_asset
-
 
 
 class Trades(models.Model):

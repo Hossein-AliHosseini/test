@@ -14,12 +14,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Trades',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                                           primary_key=True,
+                                           serialize=False,
+                                           verbose_name='ID')),
                 ('time', models.DateTimeField(unique=True)),
                 ('price', models.FloatField()),
                 ('volume', models.FloatField()),
                 ('type', models.CharField(max_length=1)),
-                ('market', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='nobitex.market')),
+                ('market', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='nobitex.market')),
             ],
         )
     ]
