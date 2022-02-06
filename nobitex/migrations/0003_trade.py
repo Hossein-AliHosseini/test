@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='Trade',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('time', models.DateTimeField()),
+                ('time', models.DateTimeField(unique=True)),
                 ('price', models.FloatField()),
                 ('volume', models.FloatField()),
                 ('type', models.CharField(max_length=1)),

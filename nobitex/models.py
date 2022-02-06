@@ -30,7 +30,8 @@ class Market(models.Model):
 
 
 class Trade(models.Model):
-    time = models.DateTimeField()
+    # time = models.DateTimeField(unique=True)
+    time = models.BigIntegerField(unique=True)
     price = models.FloatField()
     volume = models.FloatField()
     type = models.CharField(max_length=1)
