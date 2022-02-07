@@ -10,7 +10,6 @@ def run():
     Trades.objects.all().delete()
     with open('nobitex/data.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
-        next(csv_reader)
         markets = list(Market.objects.all())
         def get_market(market_string):
             market = next(

@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('nbx/', include('nobitex.urls')),
+    path('nbx/trades', include('nobitex.urls'))
 ]

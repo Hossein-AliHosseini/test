@@ -1,0 +1,27 @@
+<html>
+
+    <body>
+        
+        <table border = "1" cellspacing = "5" cellpadding = "5">
+            <td>Time</td>
+            <td>Price</td>
+            <td>Volume</td>
+            <td>Type</td>
+
+            {% for i in  all_trades %}
+
+            <tr>
+                <td>{{i.time}}</td>
+                <td>{{i.price}}</td>
+                <td>{{i.volume}}</td>
+                <td>{{i.type}}</td>
+            </tr>
+
+            {% endfor %}
+
+
+        </table>
+
+    </body>
+
+</html>
