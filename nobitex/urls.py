@@ -5,5 +5,5 @@ from nobitex.views import trade_table
 
 urlpatterns = [
     path('', hello_world),
-    path('', trade_table)
+    # path('/trades', trade_table)
 ]

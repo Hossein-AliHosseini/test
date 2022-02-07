@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from nobitex import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('nbx/', include('nobitex.urls')),
-    path('nbx/trades', include('nobitex.urls'))
+    path('nbx/trades/', views.trade_table)
 ]

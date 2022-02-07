@@ -22,9 +22,9 @@ def hello_world(request):
             print(trade_time, time)
             if trade_time == time:
                 temp_trades.append(trade)
-        print(temp_trades)
+        context['valid_trades'] = temp_trades
     return render(request, 'date_market_view.html', context)
 
 
 def trade_table(request):
-    pass
+        return render(request, 'table_view.html', context)
