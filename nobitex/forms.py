@@ -1,6 +1,8 @@
 from django import forms
 
+from nobitex.models import Market
+
 
 class TradeForm(forms.Form):
-    date = forms.CharField()
-    market = forms.CharField()
+    date = forms.DateField()
+    market = forms.ModelChoiceField(queryset=Market.objects.all())

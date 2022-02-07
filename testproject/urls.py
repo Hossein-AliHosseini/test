@@ -20,5 +20,4 @@ from nobitex import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('nbx/', include('nobitex.urls')),
-    path('nbx/trades/', views.trade_table)
 ]

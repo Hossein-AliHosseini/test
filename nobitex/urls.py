@@ -1,9 +1,8 @@
 from django.urls import path
 
-from nobitex.views import hello_world
-from nobitex.views import trade_table
+from nobitex.views import view_trades, hello_world
 
 urlpatterns = [
     path('', hello_world),
-    # path('/trades', trade_table)
+    path('trades', view_trades),
 ]
