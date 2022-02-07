@@ -35,6 +35,10 @@ def run():
                 market=market,
             )
             all_trades.append(new_trade)
+            if len(all_trades) < 1000:
+                continue
+            Trades.objects.bulk_create(all_trades)
+            all_trades = []
         Trades.objects.bulk_create(all_trades)
 
 run()
