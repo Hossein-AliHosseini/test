@@ -22,10 +22,7 @@ def view_trades(request):
             'date': date,
             'market': market,
         })
-    queryset = Trades.objects.filter(
-        time__date=date,
-        market=market,
-    )
+    queryset = Trades.objects.select_related('market').filter(time__date=date)
     table = TradesTable(queryset)
     table.paginate(page=request.GET.get('page', 1), per_page=50)
     return render(request, 'view_trades.html', {
