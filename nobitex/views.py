@@ -2,11 +2,13 @@ from django.utils.timezone import now
 from django.shortcuts import render, HttpResponse
 from django.db.models import Min, Max
 
-from nobitex.models import Trades, Market, Tradeee
+from nobitex.models import Trades, Market
 from nobitex.forms import TradeForm
 from nobitex.tables import TradesTable, ChartTable
 
 from datetime import timedelta
+
+import copy
 
 
 def hello_world(request):
@@ -46,21 +48,30 @@ def candlestick_charts(request):
             'date': date,
             'market': market,
         })
-    Tradeee.objects.all().delete()
     time_step = 15
-    queryset = Trades.objects.select_related('market').filter(time__gte=date).order_by('time')
+    queryset = Trades.objects.filter(time__gte=date, market=market).order_by('time')
+    table_list = []
+    table_dict = {}
     if queryset.exists():
         last_trade = queryset.last()
         while True:
-            min_max = queryset.aggregate(min_value=Min('price'), max_value=Max('price'))
-            start_end = queryset.filter(time__lt=date+timedelta(minutes=time_step), time__gte=date).order_by('time')
+            start_end = queryset.filter(time__lt=date+timedelta(minutes=time_step),
+                                        time__gte=date).order_by('time')
             if start_end.exists():
-                Tradeee(start_date=date, end_date=date+timedelta(minutes=time_step), min=min_max['min_value'], max=min_max['max_value'], start=start_end.first().price, end=start_end.last().price).save()
+                table_dict['open'] = str(start_end.first().price)
+                table_dict['close'] = str(start_end.last().price)
+                table_dict['start_time'] = str(date)
+                table_dict['end_time'] = str(date+timedelta(minutes=time_step))
+                min_max = start_end.aggregate(min_value=Min('price'),
+                                              max_value=Max('price'))
+                table_dict['low'] = min_max['min_value']
+                table_dict['high'] = min_max['max_value']
+                table_list.append(copy.deepcopy(table_dict))
             if last_trade.time <= date:
                 break
             else:
-                date = date + timedelta(minutes=time_step)
-    table = ChartTable(Tradeee.objects.all())
+                date += timedelta(minutes=time_step)
+    table = ChartTable(table_list)
     table.paginate(page=request.GET.get('page', 1), per_page=50)
     return render(request, 'candlestick_charts.html', {
         'form': form,
