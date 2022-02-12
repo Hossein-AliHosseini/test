@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+from datetime import timedelta
 
 class Market(models.Model):
     base_asset = models.CharField(max_length=8)
@@ -29,3 +30,14 @@ class Trades(models.Model):
 
     def __str__(self):
         return str(self.market) + '-' + self.type
+
+
+class Tradeee(models.Model):
+    start_date = models.DateTimeField(default=None)
+    end_date = models.DateTimeField(default=None)
+    max = models.FloatField()
+    min = models.FloatField()
+    start = models.FloatField()
+    end = models.FloatField()
+    class Meta:
+        unique_together = ('max', 'min', 'start', 'end')
