@@ -51,10 +51,9 @@ def candlestick_charts(request):
     queryset = Trades.objects.select_related('market').filter(time__gte=date).order_by('time')
     if queryset.exists():
         last_trade = queryset.last()
-        print("blp")
         while True:
             min_max = queryset.aggregate(min_value=Min('price'), max_value=Max('price'))
-            start_end = queryset.filter(time__lte=date+timedelta(minutes=time_step), time__gte=date).order_by('time')
+            start_end = queryset.filter(time__lt=date+timedelta(minutes=time_step), time__gte=date).order_by('time')
             if start_end.exists():
                 Tradeee(start_date=date, end_date=date+timedelta(minutes=time_step), min=min_max['min_value'], max=min_max['max_value'], start=start_end.first().price, end=start_end.last().price).save()
             if last_trade.time <= date:
