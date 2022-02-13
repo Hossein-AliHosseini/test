@@ -27,7 +27,7 @@ def view_trades(request):
             'date': date,
             'market': market,
         })
-    queryset = Trades.objects.select_related('market').filter(time=date)
+    queryset = Trades.objects.select_related("market").filter(time__date=date, market=market)
     table = TradesTable(queryset)
     table.paginate(page=request.GET.get('page', 1), per_page=50)
     return render(request, 'view_trades.html', {
@@ -50,28 +50,28 @@ def candlestick_charts(request):
         })
     time_step = 15
     queryset = Trades.objects.filter(time__gte=date, market=market).order_by('time')
-    table_list = []
-    table_dict = {}
-    if queryset.exists():
-        last_trade = queryset.last()
-        while True:
-            start_end = queryset.filter(time__lt=date+timedelta(minutes=time_step),
-                                        time__gte=date).order_by('time')
-            if start_end.exists():
-                table_dict['open'] = str(start_end.first().price)
-                table_dict['close'] = str(start_end.last().price)
-                table_dict['start_time'] = str(date)
-                table_dict['end_time'] = str(date+timedelta(minutes=time_step))
-                min_max = start_end.aggregate(min_value=Min('price'),
-                                              max_value=Max('price'))
-                table_dict['low'] = min_max['min_value']
-                table_dict['high'] = min_max['max_value']
-                table_list.append(copy.deepcopy(table_dict))
-            if last_trade.time <= date:
-                break
-            else:
-                date += timedelta(minutes=time_step)
-    table = ChartTable(table_list)
+    # table_list = []
+    # table_dict = {}
+    # if queryset.exists():
+    #     last_trade = queryset.last()
+    #     while True:
+    #         start_end = queryset.filter(time__lt=date+timedelta(minutes=time_step),
+    #                                     time__gte=date).order_by('time')
+    #         if start_end.exists():
+    #             table_dict['open'] = str(start_end.first().price)
+    #             table_dict['close'] = str(start_end.last().price)
+    #             table_dict['start_time'] = str(date)
+    #             table_dict['end_time'] = str(date+timedelta(minutes=time_step))
+    #             min_max = start_end.aggregate(min_value=Min('price'),
+    #                                           max_value=Max('price'))
+    #             table_dict['low'] = min_max['min_value']
+    #             table_dict['high'] = min_max['max_value']
+    #             table_list.append(copy.deepcopy(table_dict))
+    #         if last_trade.time <= date:
+    #             break
+    #         else:
+    #             date += timedelta(minutes=time_step)
+    table = ChartTable(queryset)
     table.paginate(page=request.GET.get('page', 1), per_page=50)
     return render(request, 'candlestick_charts.html', {
         'form': form,
