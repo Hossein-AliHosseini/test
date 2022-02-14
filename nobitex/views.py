@@ -1,6 +1,7 @@
 from django.utils.timezone import now
 from django.shortcuts import render, HttpResponse
-from django.db.models import Min, Max
+from django.db.models import Min, Max, DateTimeField, Count, F, Case, When, Value, CharField, Q
+from django.db.models.functions import Trunc
 
 from nobitex.models import Trades, Market
 from nobitex.forms import TradeForm
@@ -48,29 +49,17 @@ def candlestick_charts(request):
             'date': date,
             'market': market,
         })
-    time_step = 15
-    queryset = Trades.objects.filter(time__gte=date, market=market).order_by('time')
-    # table_list = []
-    # table_dict = {}
-    # if queryset.exists():
-    #     last_trade = queryset.last()
-    #     while True:
-    #         start_end = queryset.filter(time__lt=date+timedelta(minutes=time_step),
-    #                                     time__gte=date).order_by('time')
-    #         if start_end.exists():
-    #             table_dict['open'] = str(start_end.first().price)
-    #             table_dict['close'] = str(start_end.last().price)
-    #             table_dict['start_time'] = str(date)
-    #             table_dict['end_time'] = str(date+timedelta(minutes=time_step))
-    #             min_max = start_end.aggregate(min_value=Min('price'),
-    #                                           max_value=Max('price'))
-    #             table_dict['low'] = min_max['min_value']
-    #             table_dict['high'] = min_max['max_value']
-    #             table_list.append(copy.deepcopy(table_dict))
-    #         if last_trade.time <= date:
-    #             break
-    #         else:
-    #             date += timedelta(minutes=time_step)
+    time_step = 1
+    queryset = Trades.objects.filter(time__gte=date, market=market).\
+        annotate(start_time=Trunc('time', 'hour', output_field=DateTimeField())).order_by('start_time').\
+            values('start_time').annotate(time_cnt=Count('start_time')).\
+                annotate(low=Min('price'), high=Max('price'), min_time=Min('time'), max_time=Max('time'))
+                    #     annotate(open=Case(
+                    #     When(time__gte=F('min_time'), time__lt=F('min_time')+timedelta(milliseconds=1), then=F('price')), output_field=CharField()
+                    # )).\
+                    #     annotate(close=Case(
+                    #         When(time__gt=F('max_time')-timedelta(milliseconds=1), time__lte=F('max_time'), then=F('price')), output_field=CharField()
+                    #     ))
     table = ChartTable(queryset)
     table.paginate(page=request.GET.get('page', 1), per_page=50)
     return render(request, 'candlestick_charts.html', {

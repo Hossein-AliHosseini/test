@@ -15,7 +15,6 @@ class ChartTable(tables.Table):
     open = tables.Column()
     close = tables.Column()
     start_time = tables.Column()
-    end_time = tables.Column()
 
 
     def render_low(self, value):
@@ -31,7 +30,4 @@ class ChartTable(tables.Table):
         return '| %s |' % value
 
     def render_start_time(self, value):
-        return '| %s |' % value
-
-    def render_end_time(self, value):
         return '| %s |' % value
