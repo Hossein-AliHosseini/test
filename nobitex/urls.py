@@ -1,6 +1,7 @@
 from django.urls import path
 
-from nobitex.views import view_trades, hello_world, candlestick_charts, check_status
+from nobitex.views import (view_trades, hello_world,
+                           candlestick_charts, check_status)
 
 urlpatterns = [
     path('', hello_world),

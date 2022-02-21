@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Market(models.Model):
     base_asset = models.CharField(max_length=8)
     quote_asset = models.CharField(max_length=8)

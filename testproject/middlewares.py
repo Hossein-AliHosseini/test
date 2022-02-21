@@ -6,9 +6,10 @@ except ImportError:
 
 import textwrap
 
-from django.conf import settings
 from pygments import highlight, lexers, formatters
 from pygments_pprint_sql import SqlFilter
+
+from django.conf import settings
 
 
 class SqlPrintMiddleware(Parent):
@@ -37,8 +38,8 @@ class SqlPrintMiddleware(Parent):
 
             if max_queries and dbhits > max_queries:
                 raise RuntimeError(textwrap.dedent("""\
-                    A single request caused {dbhits} db hits, which is more than
-                    settings.SQLPRINT_MAX_QUERIES
+                    A single request caused {dbhits} db hits,
+                     which is more than settings.SQLPRINT_MAX_QUERIES
                     """.format(dbhits=dbhits)))
 
         return response
@@ -53,7 +54,8 @@ class SqlPrintMiddleware(Parent):
         for query in queries:
             print(query['time'], 'used on:')
             totsecs += float(query['time'])
-            print(highlight(query['sql'], lexer, formatters.TerminalFormatter()))
+            print(highlight(query['sql'],
+                            lexer, formatters.TerminalFormatter()))
 
         print('Number of queries:', len(queries))
         print('Total time:', totsecs)
