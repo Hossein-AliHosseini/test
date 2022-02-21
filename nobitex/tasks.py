@@ -1,9 +1,10 @@
-from celery import shared_task, Celery
-from nobitex.models import Trades, Market
+from celery import shared_task
+
 from django.db.models import Min, Max, DateTimeField
 from django.db.models.functions import Trunc
 
-app = Celery('tasks', broker='redis://127.0.0.1:6379', backend='django-db')
+from nobitex.models import Trades, Market
+
 
 @shared_task
 def store_trades(market):
@@ -13,7 +14,7 @@ def store_trades(market):
         file_obj.write(str(query) + "\n")
 
 
-@app.task
+@shared_task
 def create_chart(date, market_id):
     market = Market.objects.get(id = market_id)
     queryset = Trades.objects.filter(time__gte=date, market=market).\
