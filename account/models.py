@@ -13,5 +13,13 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
+    class Meta:
+        permissions = [
+            ('read_index', "Can view all indexes"),
+            ('delete_index', "Can delete any index"),
+            ('create_index', "Can create a new index"),
+            ('update_index', "Can update any existing index"),
+        ]
+
     def __str__(self):
         return self.email
