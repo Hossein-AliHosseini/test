@@ -16,10 +16,13 @@
       {% if user.is_authenticated %}
           <a href="{% url 'logout' %}">Logout</a>
 
+          <a href="{% url 'trades' %}">Trades</a>
       {% else %}
           <a href="{% url 'login' %}">Login</a>
 
           <a href="{% url 'signup' %}">Sign Up</a>
+
+          Trades
       {% endif %}
   </div>
 
