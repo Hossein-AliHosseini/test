@@ -4,9 +4,14 @@ from django.contrib.auth.forms import (UserCreationForm,
                                        AuthenticationForm,
                                        PasswordChangeForm)
 from django.views.generic.edit import CreateView
-from django.contrib.auth import login, logout, update_session_auth_hash
+from django.contrib.auth import (login,
+                                 logout,
+                                 update_session_auth_hash,
+                                 authenticate)
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+
+from .forms import CustomUserCreationForm
 
 
 def home(request):
@@ -50,7 +55,16 @@ def change_password(request):
     })
 
 
-class SignUp(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy("login")
-    template_name = "registration/signup.html"
+def signup_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(email=email, password=password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})

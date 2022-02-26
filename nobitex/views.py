@@ -3,6 +3,7 @@ from celery.result import AsyncResult
 from django.utils.timezone import now
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 from nobitex.models import Trades, Market
 from nobitex.forms import TradeForm
@@ -14,6 +15,7 @@ def hello_world(request):
     return HttpResponse('<h1>Hello World!</h1>')
 
 
+@login_required(login_url='signup')
 def view_trades(request):
     form = TradeForm(request.GET)
     if form.is_valid():
