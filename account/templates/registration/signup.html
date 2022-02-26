@@ -1,12 +1,17 @@
-{% block content %}
-<h2>Register</h2>
+{% load bootstrap4 %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-<form method="post">
+{% block content %}
+<h2 ALIGN="center">Register</h2>
+
+<form ALIGN='center' method="post">
     {% csrf_token %}
-    {{form}}
+    {% bootstrap_form form %}
     <input type="submit" value="Register">
+    <br></br>
+    <a href="{% url 'login' %}">Back to login</a>
+    &nbsp;
+    <a href="{% url 'home' %}">Back to Home</a>
 </form>
 
-<a href="{% url 'login' %}">Back to login</a>
-<a href="{% url 'home' %}">Back to Home</a>
 {% endblock %}
