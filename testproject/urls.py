@@ -23,3 +23,7 @@ urlpatterns = [
     path('home/', include('account.urls')),
     path('index/', include('index.urls')),
 ]
+
+handle404 = 'account.views.handle_404'
+# handle500 = 'account.views.handle_500'
+handle403 = 'account.views.handle_403'

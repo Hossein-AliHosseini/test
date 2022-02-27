@@ -68,3 +68,15 @@ def signup_view(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+
+def handle_404(request):
+    return render(request, '404.html')
+
+
+# def handle_500(request):
+#     return render(request, '500.html')
+
+
+def handle_403(request):
+    return render(request, '403.html')
