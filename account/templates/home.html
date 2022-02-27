@@ -1,18 +1,12 @@
-<html>
-  <head>
-    <style>
-     body {
-      text-align: center;
-      }
+{% extends "base.html" %}
 
-    </style>
-  </head>
+{% block content %}
   <body>
 
-    <h1>Hello, {{ user.email|default:'Guest' }}</h1>
+    <h1 ALIGN="center">Hello, {{ user.email|default:'Guest' }}</h1>
 
-    <p> Welcome Page (to be implemented!)</p>
-    <div>
+    <p ALIGN="center"> Home Page</p>
+    <div ALIGN="center">
       {% if user.is_authenticated %}
           <a href="{% url 'log_out' %}">Logout</a>
           &nbsp;
@@ -27,4 +21,4 @@
   </div>
 
   </body>
-</html>
+  {% endblock %}
