@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, Client
 
 
 class UsersManagersTests(TestCase):
@@ -38,3 +38,23 @@ class UsersManagersTests(TestCase):
         with self.assertRaises(ValueError):
             User.objects.create_superuser(
                 email='super@user.com', password='foo', is_superuser=False)
+
+    def test_login(self):
+        User = get_user_model()
+        User.objects.create_user(email='normal@user.com', password='foo')
+        user = User.objects.get(email='normal@user.com')
+        c = Client()
+        logged_in = c.login(email=user.email, password='foo')
+        self.assertTrue(logged_in)
+
+    def test_change_password(self):
+        User = get_user_model()
+        User.objects.create_user(email='normal@user.com', password='foo')
+        user = User.objects.get(email='normal@user.com')
+        self.assertEquals(user.check_password("foo"), True)
+        self.assertEquals(user.check_password("bar"), False)
+        user = User.objects.change_password(email='normal@user.com',
+                                            password='foo',
+                                            new_password='bar')
+        self.assertEquals(user.check_password("bar"), True)
+        self.assertEquals(user.check_password("foo"), False)

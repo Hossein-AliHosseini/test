@@ -20,3 +20,13 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(email, password, **extra_fields)
+
+    def change_password(self, email, password, new_password, **extra_fields):
+        user = self.get(email=email)
+        if not user:
+            raise ValueError('No user find for given email')
+        if not user.check_password(password):
+            raise ValueError('Wrong password provided')
+        user.set_password(new_password)
+        user.save()
+        return user
