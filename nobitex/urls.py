@@ -6,6 +6,6 @@ from nobitex.views import (view_trades, hello_world,
 urlpatterns = [
     path('', hello_world),
     path('trades', view_trades, name="trades"),
-    path('charts', candlestick_charts),
+    path('charts', candlestick_charts, name='charts'),
     path('check_status', check_status, name='check_status'),
 ]
