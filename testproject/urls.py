@@ -25,5 +25,5 @@ urlpatterns = [
 ]
 
 handle404 = 'account.views.handle_404'
-# handle500 = 'account.views.handle_500'
+handle500 = 'account.views.handle_500'
 handle403 = 'account.views.handle_403'
