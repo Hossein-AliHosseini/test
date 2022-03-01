@@ -13,7 +13,6 @@ class MA(models.Model):  # (Simple) Moving Average
 class EMA(models.Model):  # Exponential Moving Average
     start = models.DateField()
     end = models.DateField()
-    duration = models.IntegerField()
     volume = models.FloatField()
 
     def __str__(self):

@@ -46,7 +46,8 @@ def EMA_view(request):
             'start': start,
             'end': end
         })
-    result = ema.delay(start, end, market.id)
+    result = ema.delay(start.strftime("%Y-%m-%d"),
+                       end.strftime("%Y-%m-%d"), market.id)
     return render(request, 'ema.html', {'task_id': result, 'form': form})
 
 
@@ -62,7 +63,7 @@ def SO_view(request):
             'market': market,
             'start': start,
         })
-    result = so.delay(start, market.id)
+    result = so.delay(start.strftime("%Y-%m-%d"), market.id)
     return render(request, 'so.html', {'task_id': result, 'form': form})
 
 
@@ -81,7 +82,8 @@ def ADI_view(request):
             'start': start,
             'end': end
         })
-    result = adi.delay(start, end, market.id)
+    result = adi.delay(start.strftime("%Y-%m-%d"),
+                       end.strftime("%Y-%m-%d"), market.id)
     return render(request, 'adi.html', {'task_id': result, 'form': form})
 
 
