@@ -46,8 +46,10 @@ def EMA_view(request):
             'start': start,
             'end': end
         })
+    duration = (end - start).days
     result = ema.delay(start.strftime("%Y-%m-%d"),
-                       end.strftime("%Y-%m-%d"), market.id)
+                       end.strftime("%Y-%m-%d"),
+                       market.id, duration)
     return render(request, 'ema.html', {'task_id': result, 'form': form})
 
 
