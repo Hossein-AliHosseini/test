@@ -8,4 +8,28 @@
 
 {% block content %}
 
+<p id="paragraph">Please wait to calculate Moving Average...</p>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.13.1/bootstrap-table.min.js"></script>
+<script> src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" </script>
+ <script type="text/javascript">
+ $('.document').ready(function(){
+   var task_id = '{{task_id}}'
+   var clear = setInterval(function(){
+     $.ajax({
+     type:"GET",
+     url: "{% url 'check_index_status' %}",
+     data : {"task_id" : task_id},
+  }).done(function(response){
+      console.log(response);
+    if (response !== false){
+        document.getElementById("paragraph").innerHTML = "Moving Average is: " + response;
+        clearInterval(clear)
+    }
+  });
+   }, 500)
+});
+</script>
+
 {% endblock %}
