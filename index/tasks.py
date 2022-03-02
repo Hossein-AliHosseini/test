@@ -78,7 +78,7 @@ def so(start, market_id):
 def adi(start, end, market_id, first):
     start = datetime.strptime(str(start)[:10], '%Y-%m-%d')
     end = datetime.strptime(str(end)[:10], '%Y-%m-%d')
-    start = datetime.strptime(str(start)[:10], '%Y-%m-%d')
+    first = datetime.strptime(str(first)[:10], '%Y-%m-%d')
     cache = ADI.objects.filter(start=start, end=end).first()
     if cache:
         return cache.volume
