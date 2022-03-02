@@ -46,10 +46,12 @@ def EMA_view(request):
             'start': start,
             'end': end
         })
+    first = Trades.objects.order_by('time').first().time.date()
     duration = (end - start).days
     result = ema.delay(start.strftime("%Y-%m-%d"),
                        end.strftime("%Y-%m-%d"),
-                       market.id, duration)
+                       market.id, duration,
+                       first.strftime("%Y-%m-%d"))
     return render(request, 'ema.html', {'task_id': result, 'form': form})
 
 
@@ -84,8 +86,10 @@ def ADI_view(request):
             'start': start,
             'end': end
         })
+    first = Trades.objects.order_by('time').first().time.date()
     result = adi.delay(start.strftime("%Y-%m-%d"),
-                       end.strftime("%Y-%m-%d"), market.id)
+                       end.strftime("%Y-%m-%d"), market.id,
+                       start.strftime("%Y-%m-%d"))
     return render(request, 'adi.html', {'task_id': result, 'form': form})
 
 
