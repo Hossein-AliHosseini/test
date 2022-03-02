@@ -1,0 +1,39 @@
+1. (Simple) Moving Average:
+میانگین قیمت تریدها را در بازه زمانی داده شده محاسبه می‌کند. محاسبات به کمک aggregate در django ORM صورت می‌گیرد.
+
+
+
+2. Exponential Moving Average:
+به صورت بازگشتی محاسبه می‌شود. حالت پایه در این تابع، برابر با Moving Average بازه است. به‌طور کلی فرمول محاسبه برابر است با:
+EMA = Closing price x multiplier + EMA (previous day) x (1-multiplier) , multiplier = 2 / 1 + time period duration
+
+
+
+3. Stochastic Oscillator:
+در یک بازه ۱۴ روزه محاسبه می‌شود و فرمول آن برابر  است با:
+%K = ((C - L14) / (H14 - L14)) * 100
+
+C = The most recent closing price
+L14 = The lowest price traded of the 14 previous
+trading sessions
+H14 = The highest price traded during the same
+14-day period
+%K = The current value of the stochastic indicator
+​
+
+
+4. Accumulation/Distribution Indicator:
+این شاخص نیز به‌صورت بازگشتی محاسبه می‌شود و فرمول محاسبه آن نیز برابر است با:
+A/D = Previous A/D + CMFV
+CMFV = Current period money flow volume
+چو برای محاسبه CMFV نیز داریم:
+MFV = MFM * Period Volume
+MFM = ((Close - Low) - (High - Close)) / (High - Low)
+
+MFM=Money Flow Multiplier
+Close=Closing price
+Low=Low price for the period
+High=High price for the period
+​
+در حالت پایه نیز، تنها MFV محاسبه می‌شود.
+
