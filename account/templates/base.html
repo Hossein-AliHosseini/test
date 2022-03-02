@@ -14,6 +14,7 @@
 </head>
 <body>
 
+  <div class="row">
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Account Menu
@@ -35,6 +36,18 @@
           <a class="dropdown-item" href="{% url 'charts' %}">Charts</a>
         </div>
       </div>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Index Menu
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="{% url 'ma' %}">Moving Average</a>
+          <a class="dropdown-item" href="{% url 'ema' %}">Exponential Moving Average</a>
+          <a class="dropdown-item" href="{% url 'so' %}">Stochastic Oscillator</a>
+          <a class="dropdown-item" href="{% url 'adi' %}">Accumulation/Distribution Indicator</a>
+        </div>
+      </div>
+    </div>
 
 {% block content %}
 {% endblock %}
