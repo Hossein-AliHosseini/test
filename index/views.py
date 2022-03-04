@@ -2,7 +2,8 @@ from celery.result import AsyncResult
 
 from django.shortcuts import render
 from django.utils.timezone import now
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 from .forms import *
 from .tasks import *
@@ -10,6 +11,7 @@ from .tasks import *
 from datetime import timedelta
 
 
+@login_required(login_url='signup')
 def MA_view(request):
     form = Type1Form(request.GET)
     if form.is_valid():
@@ -25,12 +27,14 @@ def MA_view(request):
             'start': start,
             'end': end
         })
-    result = ma.delay(start.strftime("%Y-%m-%d"),
+    result = ma.delay(request.user.email,
+                      start.strftime("%Y-%m-%d"),
                       end.strftime("%Y-%m-%d"),
                       market.id)
     return render(request, 'ma.html', {'task_id': result, 'form': form})
 
 
+@login_required(login_url='signup')
 def EMA_view(request):
     form = Type1Form(request.GET)
     if form.is_valid():
@@ -55,6 +59,7 @@ def EMA_view(request):
     return render(request, 'ema.html', {'task_id': result, 'form': form})
 
 
+@login_required(login_url='signup')
 def SO_view(request):
     form = Type2Form(request.GET)
     if form.is_valid():
@@ -71,6 +76,7 @@ def SO_view(request):
     return render(request, 'so.html', {'task_id': result, 'form': form})
 
 
+@login_required(login_url='signup')
 def ADI_view(request):
     form = Type1Form(request.GET)
     if form.is_valid():
