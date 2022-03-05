@@ -30,6 +30,7 @@
         </div>
       </div>
 
+      {% if user.is_authenticated %}
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Nobitex Menu
@@ -50,6 +51,7 @@
           <a class="dropdown-item" href="{% url 'adi' %}">Accumulation/Distribution Indicator</a>
         </div>
       </div>
+      {% endif %}
     </div>
 
 {% block content %}
