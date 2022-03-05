@@ -3,11 +3,11 @@ import csv
 
 from django.utils.timezone import make_aware
 
-from nobitex.models import Market, Trades
+from nobitex.models import Market, Trade
 
 
 def run():
-    Trades.objects.all().delete()
+    Trade.objects.all().delete()
     with open('nobitex/data.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         markets = list(Market.objects.all())
@@ -28,7 +28,7 @@ def run():
         all_trades = []
         for row in csv_reader:
             market = get_market(row[0])
-            new_trade = Trades(
+            new_trade = Trade(
                 time=(make_aware(datetime.datetime.
                                  fromtimestamp(float(row[4])))),
                 price=float(row[2]),
@@ -39,9 +39,9 @@ def run():
             all_trades.append(new_trade)
             if len(all_trades) < 1000:
                 continue
-            Trades.objects.bulk_create(all_trades)
+            Trade.objects.bulk_create(all_trades)
             all_trades = []
-        Trades.objects.bulk_create(all_trades)
+        Trade.objects.bulk_create(all_trades)
 
 
 run()

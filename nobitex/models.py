@@ -20,7 +20,7 @@ class Market(models.Model):
         return self.base_asset + '-' + self.quote_asset
 
 
-class Trades(models.Model):
+class Trade(models.Model):
     time = models.DateTimeField()
     price = models.FloatField()
     volume = models.FloatField()

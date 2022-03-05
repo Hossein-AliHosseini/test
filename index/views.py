@@ -5,8 +5,9 @@ from django.utils.timezone import now
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
-from .forms import *
-from .tasks import *
+from .forms import Type1Form, Type2Form
+from .tasks import ma, ema, so, adi
+from nobitex.models import Market, Trade
 
 from datetime import timedelta
 
@@ -50,7 +51,7 @@ def EMA_view(request):
             'start': start,
             'end': end
         })
-    first = Trades.objects.order_by('time').first().time.date()
+    first = Trade.objects.order_by('time').first().time.date()
     duration = (end - start).days
     result = ema.delay(start.strftime("%Y-%m-%d"),
                        end.strftime("%Y-%m-%d"),
@@ -92,7 +93,7 @@ def ADI_view(request):
             'start': start,
             'end': end
         })
-    first = Trades.objects.order_by('time').first().time.date()
+    first = Trade.objects.order_by('time').first().time.date()
     result = adi.delay(start.strftime("%Y-%m-%d"),
                        end.strftime("%Y-%m-%d"), market.id,
                        start.strftime("%Y-%m-%d"))

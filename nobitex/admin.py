@@ -1,6 +1,6 @@
 from django.contrib import admin
-from nobitex.models import Market, Trades
+from nobitex.models import Market, Trade
 
 
 admin.site.register(Market)
-admin.site.register(Trades)
+admin.site.register(Trade)

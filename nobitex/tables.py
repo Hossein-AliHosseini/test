@@ -1,11 +1,11 @@
 import django_tables2 as tables
 
-from nobitex.models import Trades
+from nobitex.models import Trade
 
 
 class TradesTable(tables.Table):
     class Meta:
-        model = Trades
+        model = Trade
         template_name = 'django_tables2/bootstrap4.html'
         empty_text = 'No trades for given market and date!!!'
 

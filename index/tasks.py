@@ -5,8 +5,8 @@ from celery import shared_task
 from django.db.models import Avg, Max, Min
 from django.contrib.auth import get_user_model
 
-from nobitex.models import Trades, Market
-from .models import *
+from nobitex.models import Trade, Market
+from .models import MA, EMA, SO, ADI
 # save data after calculation
 
 User = get_user_model()
@@ -18,10 +18,10 @@ def ma(user, start, end, market_id):
     cache = MA.objects.filter(start=start, end=end).first()
     if cache and user.has_perm('index.view_ma'):
         return cache.volume
-    queryset = Trades.objects.filter(time__date__gte=start,
-                                     time__date__lte=end,
-                                     market=Market.objects.get(id=market_id)).\
-                                         aggregate(moving_average=Avg('price'))
+    queryset = Trade.objects.filter(time__date__gte=start,
+                                    time__date__lte=end,
+                                    market=Market.objects.get(id=market_id)).\
+                                        aggregate(moving_average=Avg('price'))
     if user.has_perm('index.create_ma'):
         new_ma = MA.objects.create(start=start,
                                    end=end,
@@ -42,15 +42,15 @@ def ema(user, start, end, market_id, duration, first):
         return cache.volume
     multiplier = 2 / (1 + duration)
     market = Market.objects.get(id=market_id)
-    queryset = Trades.objects.filter(time__date__gte=start,
-                                     time__date__lte=end,
-                                     market=market)
+    queryset = Trade.objects.filter(time__date__gte=start,
+                                    time__date__lte=end,
+                                    market=market)
     if start == first:
         queryset = queryset.aggregate(moving_average=Avg('price'))
         if user.has_perm('index.create_ema'):
             new_ema = EMA.objects.create(start=start,
-                                        end=end,
-                                        volume=float(queryset['moving_average']))
+                                         end=end,
+                                         volume=float(queryset['moving_average']))
             return new_ema.volume
         else:
             return 'You do not have permission to access this index'
@@ -75,15 +75,15 @@ def so(user, start, market_id):
     if cache and user.has_perm('index.create_so'):
         return cache.volume
     market = Market.objects.get(id=market_id)
-    close_price = Trades.objects.filter(time__date__gte=start-timedelta(days=14),
-                                        time__date__lte=start,
-                                        market=market).\
-                                            order_by('time').last().price
-    queryset = Trades.objects.filter(time__date__gte=start-timedelta(days=14),
-                                     time__date__lte=start,
-                                     market=market).\
-                                         aggregate(low=Min('price'),
-                                                   high=Max('price'))
+    close_price = Trade.objects.filter(time__date__gte=start-timedelta(days=14),
+                                       time__date__lte=start,
+                                       market=market).\
+                                        order_by('time').last().price
+    queryset = Trade.objects.filter(time__date__gte=start-timedelta(days=14),
+                                    time__date__lte=start,
+                                    market=market).\
+                                        aggregate(low=Min('price'),
+                                                  high=Max('price'))
     K = ((close_price - queryset['low']) / (queryset['high'] - queryset['low'])) * 100
     if user.has_perm('index.create_so'):
         new_so = SO.objects.create(start=start, volume=K)
@@ -102,9 +102,9 @@ def adi(user, start, end, market_id, first):
     if cache and user.has_perm('index.view_adi'):
         return cache.volume
     market = Market.objects.get(id=market_id)
-    queryset = Trades.objects.filter(time__date__gte=start,
-                                     time__date__lte=end,
-                                     market=market).order_by('time')
+    queryset = Trade.objects.filter(time__date__gte=start,
+                                    time__date__lte=end,
+                                    market=market).order_by('time')
     close = queryset.last().price
     low_high = queryset.aggregate(low=Min('price'),
                                   high=Max('price'))

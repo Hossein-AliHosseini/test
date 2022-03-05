@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from nobitex.models import Market, Trades
+from nobitex.models import Market, Trade
 import datetime
 import requests
 import sys
@@ -19,7 +19,7 @@ class Command(BaseCommand):
             all_trades = json_data['trades']
             for trade in all_trades:
                 try:
-                    new_trade = Trades.objects.create(
+                    new_trade = Trade.objects.create(
                         time=(datetime.datetime.fromtimestamp(
                             trade['time']/1000)
                              ),

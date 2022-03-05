@@ -5,7 +5,7 @@ from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
-from nobitex.models import Trades, Market
+from nobitex.models import Trade, Market
 from nobitex.forms import TradeForm
 from nobitex.tables import TradesTable, ChartTable
 from nobitex.tasks import create_chart
@@ -28,7 +28,7 @@ def view_trades(request):
             'date': date,
             'market': market,
         })
-    queryset = (Trades.objects.select_related("market").
+    queryset = (Trade.objects.select_related("market").
                 filter(time__date=date, market=market))
     table = TradesTable(queryset)
     table.paginate(page=request.GET.get('page', 1), per_page=50)
