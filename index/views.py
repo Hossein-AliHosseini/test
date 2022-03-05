@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from index.forms import Type1Form, Type2Form
 from index.tasks import ma, ema, so, adi
+from index.tables import MATable, EMATable, SOTable, ADITable
 from nobitex.models import Market, Trade
 
 from datetime import timedelta
@@ -32,7 +33,11 @@ def MA_view(request):
                       start.strftime("%Y-%m-%d"),
                       end.strftime("%Y-%m-%d"),
                       market.id)
-    return render(request, 'ma.html', {'task_id': result, 'form': form})
+    table = MATable({})
+    table.paginate(page=request.GET.get('page', 1), per_page=50)
+    return render(request, 'ma.html', {'task_id': result,
+                                       'form': form,
+                                       'table': table})
 
 
 @login_required(login_url='signup')

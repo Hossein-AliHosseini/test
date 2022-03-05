@@ -4,29 +4,71 @@ from celery import shared_task
 
 from django.db.models import Avg, Max, Min
 from django.contrib.auth import get_user_model
+from django.db.models import Min, Max, DateTimeField
+from django.db.models.functions import Trunc
 
 from nobitex.models import Trade, Market
-from index.models import MA, EMA, SO, ADI
-# save data after calculation
+from index.models import (MA, EMA, SO, ADI,
+                          MA_Base, EMA_Base, SO_Base, ADI_Base)
 
 User = get_user_model()
 
 
 @shared_task
 def ma(user, start, end, market_id):
+    res, temp_start, temp_end = None
     user = User.objects.get(email=user)
-    cache = MA.objects.filter(start=start, end=end).first()
-    if cache and user.has_perm('index.view_ma'):
-        return cache.volume
-    queryset = Trade.objects.filter(time__date__gte=start,
-                                    time__date__lte=end,
-                                    market=Market.objects.get(id=market_id)).\
-                                        aggregate(moving_average=Avg('price'))
+    start = datetime.strptime(str(start)[:10], '%Y-%m-%d')
+    end = datetime.strptime(str(end)[:10], '%Y-%m-%d')
+    market = Market.objects.get(id=market_id)
+    cache = MA_Base.objects.filter(start__gte=start,
+                                   end__lte=end,
+                                   market=market)
+    if cache.exists() and user.has_perm('index.view_ma'):
+        res = MA.objects.filter(base__in=cache).order_by('period_start')
+        first = res.first().period_start.date()
+        last = res.last().period_start.date()
+        if first == start and last == end:
+            return res[:]
+        temp_start = first
+        temp_end = last
     if user.has_perm('index.create_ma'):
-        new_ma = MA.objects.create(start=start,
-                                   end=end,
-                                   volume=float(queryset['moving_average']))
-        return new_ma.volume
+        queryset = (Trade.objects.filter(time__date__gte=start,
+                                         time__date__lte=temp_start,
+                                         market=market).
+                    order_by('time').
+                    annotate(period_start=Trunc('time', 'hour',
+                                                output_field=DateTimeField())).
+                    order_by('period_start').values('period_start').
+                    annotate(value=Avg('price')).
+                    values('period_start', 'value'))
+        base_ma = MA_Base.objects.create(start=start,
+                                         end=temp_start,
+                                         market=market)
+        for ma in queryset:
+            MA.objects.create(base=base_ma,
+                              period_start=ma['period_start'],
+                              value=ma['value'])
+        res |= queryset[:]
+
+        queryset = (Trade.objects.filter(time__date__gte=temp_end,
+                                         time__date__lte=end,
+                                         market=market).
+                    order_by('time').
+                    annotate(period_start=Trunc('time', 'hour',
+                                                output_field=DateTimeField())).
+                    order_by('period_start').values('period_start').
+                    annotate(value=Avg('price')).
+                    values('period_start', 'value'))
+        base_ma = MA_Base.objects.create(start=temp_end,
+                                         end=end, market=market)
+        for ma in queryset:
+            MA.objects.create(base=base_ma,
+                              period_start=ma['period_start'],
+                              value=ma['value'])
+        res |= queryset[:]
+
+        return res
     else:
         return 'You do not have permission to access this index'
 

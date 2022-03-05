@@ -8,7 +8,18 @@
 
 {% block content %}
 
-<p id="paragraph">Please wait to calculate Moving Average...</p>
+<div class="container">
+  <table id="table"
+          data-ajax="ajaxRequest"
+          data-pagination="true">
+    <thead>
+        <tr>
+            <th data-field="period_start">1-hour Period Start</th>
+            <th data-field="value">Value</th>
+        </tr>
+    </thead>
+</table>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.13.1/bootstrap-table.min.js"></script>
@@ -24,8 +35,10 @@
   }).done(function(response){
       console.log(response);
     if (response !== false){
-        document.getElementById("paragraph").innerHTML = "Moving Average is: " + response;
-        clearInterval(clear)
+      $('#table').bootstrapTable({
+        data: response
+    });
+    clearInterval(clear)
     }
   });
    }, 500)
