@@ -11,7 +11,7 @@ from django.contrib.auth import (login,
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
-from .forms import CustomUserCreationForm
+from account.forms import CustomUserCreationForm
 
 
 def home(request):

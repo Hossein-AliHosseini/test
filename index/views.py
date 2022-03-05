@@ -5,8 +5,8 @@ from django.utils.timezone import now
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
-from .forms import Type1Form, Type2Form
-from .tasks import ma, ema, so, adi
+from index.forms import Type1Form, Type2Form
+from index.tasks import ma, ema, so, adi
 from nobitex.models import Market, Trade
 
 from datetime import timedelta

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, signup_view, login_view, log_out, change_password
+from account.views import home, signup_view, login_view, log_out, change_password
 
 urlpatterns = [
     path('', home, name="home"),

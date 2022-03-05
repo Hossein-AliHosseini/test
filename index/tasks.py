@@ -6,7 +6,7 @@ from django.db.models import Avg, Max, Min
 from django.contrib.auth import get_user_model
 
 from nobitex.models import Trade, Market
-from .models import MA, EMA, SO, ADI
+from index.models import MA, EMA, SO, ADI
 # save data after calculation
 
 User = get_user_model()

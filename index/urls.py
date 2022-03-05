@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import MA_view, EMA_view, SO_view, ADI_view, check_index_status
+from index.views import MA_view, EMA_view, SO_view, ADI_view, check_index_status
 
 urlpatterns = [
     path('ma', MA_view, name='ma'),
