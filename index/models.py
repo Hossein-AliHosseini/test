@@ -3,7 +3,7 @@ from django.db import models
 from nobitex.models import Market
 
 
-class MA_Base(models.Model):  # (Simple) Moving Average
+class MABase(models.Model):  # (Simple) Moving Average
     start = models.DateField()
     end = models.DateField()
     market = models.ForeignKey(Market, on_delete=models.CASCADE)
@@ -16,12 +16,12 @@ class MA_Base(models.Model):  # (Simple) Moving Average
 
 
 class MA(models.Model):
-    base = models.ForeignKey(MA_Base, on_delete=models.CASCADE)
+    base = models.ForeignKey(MABase, on_delete=models.CASCADE)
     period_start = models.DateTimeField()
     value = models.FloatField()
 
 
-class EMA_Base(models.Model):  # Exponential Moving Average
+class EMABase(models.Model):  # Exponential Moving Average
     start = models.DateField()
     end = models.DateField()
     market = models.ForeignKey(Market, on_delete=models.CASCADE)
@@ -34,13 +34,13 @@ class EMA_Base(models.Model):  # Exponential Moving Average
 
 
 class EMA(models.Model):
-    base = models.ForeignKey(EMA_Base, on_delete=models.CASCADE)
+    base = models.ForeignKey(EMABase, on_delete=models.CASCADE)
     period_start = models.DateTimeField()
     period_end = models.DateTimeField()
     value = models.FloatField()
 
 
-class SO_Base(models.Model):  # Stochastic Oscillator
+class SOBase(models.Model):  # Stochastic Oscillator
     start = models.DateField()
     market = models.ForeignKey(Market, on_delete=models.CASCADE)
 
@@ -52,12 +52,12 @@ class SO_Base(models.Model):  # Stochastic Oscillator
 
 
 class SO(models.Model):
-    base = models.ForeignKey(SO_Base, on_delete=models.CASCADE)
+    base = models.ForeignKey(SOBase, on_delete=models.CASCADE)
     period_start = models.DateTimeField()
     value = models.FloatField()
 
 
-class ADI_Base(models.Model):  # Accumulation/Distribution Indicator
+class ADIBase(models.Model):  # Accumulation/Distribution Indicator
     start = models.DateField()
     end = models.DateField()
     market = models.ForeignKey(Market, on_delete=models.CASCADE)
@@ -70,7 +70,7 @@ class ADI_Base(models.Model):  # Accumulation/Distribution Indicator
 
 
 class ADI(models.Model):
-    base = models.ForeignKey(ADI_Base, on_delete=models.CASCADE)
+    base = models.ForeignKey(ADIBase, on_delete=models.CASCADE)
     period_start = models.DateTimeField()
     period_end = models.DateTimeField()
     value = models.FloatField()
