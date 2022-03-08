@@ -32,8 +32,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = data['message']
         email = data['email']
         room = data['room']
+        replied_message_id = data['replied_message_id']
 
-        await self.save_message(email, room, message)
+        await self.save_message(email, room, message, replied_message_id)
 
         # Send message to room group
         await self.channel_layer.group_send(
@@ -57,6 +58,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
     @sync_to_async
-    def save_message(self, email, room, message):
+    def save_message(self, email, room, message, replied_message_id):
+        replied_to = Message.objects.get(id=replied_message_id)
         Message.objects.create(email=email, room=room,
-                               content=message)
+                               content=message, replied_to=replied_to)

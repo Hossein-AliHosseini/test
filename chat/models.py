@@ -20,9 +20,9 @@ class Message(models.Model):
     email = models.EmailField()
     content = models.TextField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
-    # replied_to = models.ForeignKey('chat.Message',
-    #                                on_delete=models.CASCADE,
-    #                                null=True)
+    replied_to = models.ForeignKey('chat.Message',
+                                   on_delete=models.CASCADE,
+                                   null=True)
 
     class Meta:
         ordering = ('date_added',)
