@@ -14,7 +14,6 @@
                     <div class="column is-6 is-offset-3 mb-6">
                         <section class="hero is-primary">
                             <div class="hero-body">
-                                
                                 <p class="subtitle">
                                     A simple chat built with Django, Channels and Redis
                                 </p>
@@ -30,13 +29,17 @@
                                 <input class="input" type="text" placeholder="Room name" id="room-name-input">
                             </div>
                         </div>
-
                         <div class="field">
                             <label>Email</label>
-
+                            {% if not user.is_authenticated %}
                             <div class="control">
                                 <input class="input" type="text" placeholder="Email" id="email-input">
                             </div>
+                            {% else %}
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Email" id="email-input" value="{{ user.email }}">
+                            </div>
+                            {% endif %}
                         </div>
 
                         <div class="field">
@@ -54,7 +57,12 @@
 
             document.querySelector('#room-name-submit').onclick = function(e) {
                 var roomName = document.querySelector('#room-name-input').value;
-                var email = document.querySelector('#email-input').value;
+                var is_authenticated = '{{ user.is_authenticated }}'
+                if (!is_authenticated){
+                    var email = document.querySelector('#email-input').value;
+                } else {
+                    var email = '{{ user.email }}'
+                }
                 const valids = ["MA", "EMA", "ADI", "SO", "ETH-USDT", "BTC-USDT", "BTC-IRT", "USDT-IRT", "ETH-IRT"]
 
                 if (valids.includes(roomName)){
