@@ -23,3 +23,5 @@ redis==4.1.3
 django-celery-results==2.2.0
 django-ajax-tables==1.1.1
 pycodestyle==2.8.0
+channels==3.0.4
+channels-redis==3.3.1

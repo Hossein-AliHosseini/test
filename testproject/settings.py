@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "bootstrap4",
     'django_tables2',
     'django_celery_results',
+    'chat',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -60,21 +62,21 @@ MIDDLEWARE = [
     'testproject.middlewares.SqlPrintMiddleware',
 ]
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+#         },
+#     },
+# }
 
 ROOT_URLCONF = 'testproject.urls'
 
@@ -98,7 +100,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'testproject.wsgi.application'
-
+ASGI_APPLICATION = 'testproject.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

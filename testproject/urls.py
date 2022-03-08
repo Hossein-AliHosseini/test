@@ -22,6 +22,7 @@ urlpatterns = [
     # path('accounts/', include('django.contrib.auth.urls')),
     path('home/', include('account.urls')),
     path('index/', include('index.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 handle404 = 'account.views.handle_404'

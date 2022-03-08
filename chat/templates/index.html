@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Chatty</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    </head>
+
+    <body>
+        <section class="section">
+            <div class="container">
+                <div class="columns is-multiline">
+                    <div class="column is-6 is-offset-3 mb-6">
+                        <section class="hero is-primary">
+                            <div class="hero-body">
+                                
+                                <p class="subtitle">
+                                    A simple chat built with Django, Channels and Redis
+                                </p>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="column is-4 is-offset-4">
+                        <div class="field">
+                            <label>Room name</label>
+
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Room name" id="room-name-input">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label>Email</label>
+
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Email" id="email-input">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <a class="button is-info" id="room-name-submit">Submit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            document.querySelector('#room-name-input').focus();
+
+            document.querySelector('#room-name-submit').onclick = function(e) {
+                var roomName = document.querySelector('#room-name-input').value;
+                var email = document.querySelector('#email-input').value;
+                const valids = ["MA", "EMA", "ADI", "SO", "ETH-USDT", "BTC-USDT", "BTC-IRT", "USDT-IRT", "ETH-IRT"]
+
+                if (valids.includes(roomName)){
+                    window.location.replace(roomName + '/?email=' + email);
+                } else {
+                    alert('Invalid Room Name!\n Chooses are: ' + valids)
+                }
+            };
+        </script>
+    </body>
+</html>
